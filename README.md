@@ -19,11 +19,14 @@ enough to get you started. Here are some known limitations:
 1. Backup your database
 2. [Install pandoc](http://pandoc.org/installing.html)
 3. Install the task:
+
     ```sh
     cd $REDMINE_ROOT_DIRECTORY
     wget -P lib/tasks/ https://github.com/Ecodev/redmine_convert_textile_to_markown/raw/master/convert_textile_to_markdown.rake
     ```
+
 4. Run the task:
+
     ```sh
     bundle exec rake convert_textile_to_markdown RAILS_ENV=production
     ```
