@@ -1,0 +1,8 @@
+language: ruby
+
+before_script:
+  - wget https://github.com/jgm/pandoc/releases/download/1.17.1/pandoc-1.17.1-2-amd64.deb
+  - sudo dpkg -i pandoc-*.deb
+
+script:
+  - ruby test.rb

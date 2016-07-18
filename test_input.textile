@@ -1,0 +1,49 @@
+h1. Working
+
+h2. Redmine internal link syntax is preserved
+
+This is a [[wiki link]].
+
+h2. Code highlighting is preserved
+
+<pre><code class="sql">
+SELECT * FROM table;
+</code></pre>
+
+h2. Inline code can contains @
+
+Repository is @git@github.com/user/repo@.
+
+h2. Block code use backtick, not indent, if they are not preceded by a blank line
+
+Try this:<pre>
+echo "OK"
+</pre>
+
+h2. Quotations are preserved
+
+>  I'll be back! Ha! You didn't know I was gonna say that, did you?
+
+h1. Known limitations
+
+h2. Unsupported cell formatting is dropped silently
+
+| one                       | two |
+|\2. Cell spanning 2 columns|
+|/2. Cell spanning 2 rows   | one |
+| two |
+|>. Right-aligned cell|<. Left-aligned cell|
+
+h2. List with code block is partially supported
+
+The numbering will be reset after each code block, but layout is preserved:
+
+# first item:<pre><code class="sql">
+SELECT * FROM table;
+</code></pre>
+# second item:<pre>
+rm -rf /tmp/*
+</pre>
+# final item
+
+But some more complex case might result in broken list layout.
