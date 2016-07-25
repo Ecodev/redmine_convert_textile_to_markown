@@ -66,3 +66,19 @@ rm -rf /tmp/*
 1.  final item
 
 But some more complex case might result in broken list layout.
+
+XML tags are stripped even in `pre` tag
+---------------------------------------
+
+See https://github.com/jgm/pandoc/issues/3042
+
+
+
+
+        
+            
+                foo
+                bar
+            
+        
+

@@ -47,3 +47,20 @@ rm -rf /tmp/*
 # final item
 
 But some more complex case might result in broken list layout.
+
+h2. XML tags are stripped even in @pre@ tag
+
+See https://github.com/jgm/pandoc/issues/3042
+
+<pre><code>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <array>
+        <dict>
+            <key>foo</key>
+            <string>bar</string>
+        </dict>
+    </array>
+</plist>
+</code></pre>
