@@ -1,6 +1,6 @@
 # Redmine converter from Textile to Markown [![Build Status](https://travis-ci.org/Ecodev/redmine_convert_textile_to_markown.svg?branch=master)](https://travis-ci.org/Ecodev/redmine_convert_textile_to_markown)
 
-This is rake task for [Redmine](http://www.redmine.org/) that uses [pandoc](http://pandoc.org/) to convert database content from Textile to Markdown formatting. The conversion is tweaked to adapt to Redmine's special features.
+This is a rake task for [Redmine](http://www.redmine.org/) that uses [pandoc](http://pandoc.org/) to convert database content from Textile to Markdown formatting. The conversion is tweaked to adapt to Redmine's special features.
 
 ### Known limitations
 
