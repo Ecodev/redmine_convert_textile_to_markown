@@ -10,7 +10,6 @@ enough to get you started. Here are some known limitations:
 
 * Numbered lists containing `<pre>` blocks will lose their numbering (restarting at 1 after the `<pre>`). Some complex cases will lose their list layout entirely.
 * Tables without proper headers will be rendered with an empty header
-* Some edge cases of [formatted cell content will be broken]( https://github.com/jgm/pandoc/issues/3023)
 * Some [interlaced formatting of inline code and bold will be messed up](https://github.com/jgm/pandoc/issues/3024)
 * `<!-- -->` may appear in final ouput in a few places because Redmine incorrectly [does not support HTML in markdown](http://www.redmine.org/issues/20497)
 

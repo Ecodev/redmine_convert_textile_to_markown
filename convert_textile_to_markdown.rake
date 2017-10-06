@@ -59,6 +59,10 @@ def convert_textile_to_markdown(textile)
   # Move the class from <code> to <pre> so pandoc can generate a code block with correct language
   textile.gsub!(/(<pre)(><code)( class="[^"]*")(>)/, '\\1\\3\\2\\4')
 
+  # Remove the <code> directly inside <pre>, because pandoc would incorrectly preserve it
+  textile.gsub!(/(<pre[^>]*>)<code>/, '\\1')
+  textile.gsub!(/<\/code>(<\/pre>)/, '\\1')
+
   # Inject a class in all <pre> that do not have a blank line before them
   # This is to force pandoc to use fenced code block (```) otherwise it would
   # use indented code block and would very likely need to insert an empty HTML

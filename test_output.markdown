@@ -32,6 +32,20 @@ Quotations are preserved
 
 > I'll be back! Ha! You didn't know I was gonna say that, did you?
 
+XML tags are preserved
+----------------------
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+        <array>
+            <dict>
+                <key>foo</key>
+                <string>bar</string>
+            </dict>
+        </array>
+    </plist>
+
 Known limitations
 =================
 
@@ -66,19 +80,3 @@ rm -rf /tmp/*
 1.  final item
 
 But some more complex case might result in broken list layout.
-
-XML tags are stripped even in `pre` tag
----------------------------------------
-
-See https://github.com/jgm/pandoc/issues/3042
-
-
-
-
-        
-            
-                foo
-                bar
-            
-        
-
