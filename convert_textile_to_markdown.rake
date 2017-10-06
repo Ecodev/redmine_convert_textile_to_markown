@@ -11,6 +11,16 @@ task :convert_textile_to_markdown => :environment do
   }
 
   count = 0
+  print 'WelcomeText'
+  textile = Setting.welcome_text
+  if textile != nil
+    markdown = convert_textile_to_markdown(textile)
+    Setting.welcome_text = markdown
+  end
+  count += 1
+  print '.'
+  puts
+
   convert.each do |the_class, attributes|
     print the_class.name
     the_class.find_each do |model|
