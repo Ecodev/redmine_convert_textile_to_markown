@@ -92,7 +92,7 @@ def convert_textile_to_markdown(textile)
     '-f',
     'textile',
     '-t',
-    'markdown_github',
+    'gfm+smart',
     src.path,
     '-o',
     dst.path,
@@ -120,6 +120,13 @@ def convert_textile_to_markdown(textile)
 
   # Un-escape Redmine quotation mark "> " that pandoc is not aware of
   markdown.gsub!(/(^|\n)&gt; /, "\n> ")
+
+  # Remove <!-- end list --> injected by pandoc because Redmine incorrectly
+  # does not supported HTML comments: http://www.redmine.org/issues/20497
+  markdown.gsub!(/\n\n<!-- end list -->\n/, "\n")
+
+  # Unescape URL that could easily get mangled
+  markdown.gsub!(/(https?:\/\/\S+)/) { |link| link.gsub(/\\([_#])/, "\\1") }
 
   return markdown
 end

@@ -39,6 +39,10 @@ h2. XML tags are preserved
 </plist>
 </code></pre>
 
+h2. Plain URL should not get broken by escaped characters
+
+http://example.com/example_site/#test
+
 h1. Known limitations
 
 h2. Unsupported cell formatting is dropped silently

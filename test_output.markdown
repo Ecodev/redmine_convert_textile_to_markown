@@ -1,25 +1,20 @@
-Working
-=======
+# Working
 
-Redmine internal link syntax is preserved
------------------------------------------
+## Redmine internal link syntax is preserved
 
 This is a [[wiki link]].
 
-Code highlighting is preserved
-------------------------------
+## Code highlighting is preserved
 
 ``` sql
 SELECT * FROM table;
 ```
 
-Inline code can contains @
---------------------------
+## Inline code can contains @
 
 Repository is `git@github.com/user/repo`.
 
-Block code use backtick, not indent, if they are not preceded by a blank line
------------------------------------------------------------------------------
+## Block code use backtick, not indent, if they are not preceded by a blank line
 
 Try this:
 
@@ -27,13 +22,11 @@ Try this:
 echo "OK"
 ```
 
-Quotations are preserved
-------------------------
+## Quotations are preserved
 
-> I'll be back! Ha! You didn't know I was gonna say that, did you?
+> I'll be back\! Ha\! You didn't know I was gonna say that, did you?
 
-XML tags are preserved
-----------------------
+## XML tags are preserved
 
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -46,22 +39,23 @@ XML tags are preserved
         </array>
     </plist>
 
-Known limitations
-=================
+## Plain URL should not get broken by escaped characters
 
-Unsupported cell formatting is dropped silently
------------------------------------------------
+http://example.com/example_site/#test
+
+# Known limitations
+
+## Unsupported cell formatting is dropped silently
 
 |                         |                   |
-|-------------------------|-------------------|
+| ----------------------- | ----------------- |
 | one                     | two               |
 | Cell spanning 2 columns |
 | Cell spanning 2 rows    | one               |
 | two                     |
 | Right-aligned cell      | Left-aligned cell |
 
-List with code block is partially supported
--------------------------------------------
+## List with code block is partially supported
 
 The numbering will be reset after each code block, but layout is preserved:
 
