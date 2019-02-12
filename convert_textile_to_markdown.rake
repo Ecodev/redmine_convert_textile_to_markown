@@ -10,41 +10,44 @@ task :convert_textile_to_markdown => :environment do
     Journal => [:notes],
   }
 
-  count = 0
+  count_success = 0
+  count_failure = 0
   print 'WelcomeText'
   textile = Setting.welcome_text
   if textile != nil
     markdown = convert_textile_to_markdown(textile)
     Setting.welcome_text = markdown
   end
-  count += 1
+  count_success += 1
   print '.'
   puts
 
   convert.each do |the_class, attributes|
     print the_class.name
     the_class.find_each do |model|
-      attributes.each do |attribute|
-
-        textile = model[attribute]
-        if textile != nil
-          markdown = convert_textile_to_markdown(textile)
-          begin
-            # We may encounter errors when saving the new value.
-            # For example, if it exceeds the maximum size allowed by SQL column
+      begin
+        # We may encounter errors when saving the new value.
+        # For example, if it exceeds the maximum size allowed by SQL column
+        attributes.each do |attribute|
+          textile = model[attribute]
+          if textile != nil
+            markdown = convert_textile_to_markdown(textile)
             model.update_column(attribute, markdown)
-          rescue
-            puts
-            puts "Conversion failed for #{the_class} with id #{model.id}"
           end
         end
+      rescue
+        count_failure += 1
+        puts
+        puts "Conversion failed for #{the_class} with id #{model.id}"
+      else
+        count_success += 1
+        print '.'
       end
-      count += 1
-      print '.'
     end
     puts
   end
-  puts "Done converting #{count} models"
+  puts "Done converting #{count_success} models"
+  puts "Failed converting #{count_failure} models"
 end
 
 def convert_textile_to_markdown(textile)
