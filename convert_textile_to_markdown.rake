@@ -29,7 +29,14 @@ task :convert_textile_to_markdown => :environment do
         textile = model[attribute]
         if textile != nil
           markdown = convert_textile_to_markdown(textile)
-          model.update_column(attribute, markdown)
+          begin
+            # We may encounter errors when saving the new value.
+            # For example, if it exceeds the maximum size allowed by SQL column
+            model.update_column(attribute, markdown)
+          rescue
+            puts
+            puts "Conversion failed for #{the_class} with id #{model.id}"
+          end
         end
       end
       count += 1
