@@ -20,6 +20,12 @@ Try this:<pre>
 echo "OK"
 </pre>
 
+h2. Disabled strange `\\www.`` parsing from redmine
+
+\\www.server\asd\asd\index.html
+\\www.server.com
+
+
 h2. Quotations are preserved
 
 >  I'll be back! Ha! You didn't know I was gonna say that, did you?
@@ -53,6 +59,29 @@ h2. Unsupported cell formatting is dropped silently
 | two |
 |>. Right-aligned cell|<. Left-aligned cell|
 
+h2. Unsupported multiline tables
+
+|_. one                  |_. two |
+| Cell spanning 2 columns
+ asd |
+| Cell spanning 2 rows   | one |
+
+|_. one                       |_. two |
+| multilinecell
+  - List 1
+  - List 2
+  - List 3 | multilinecell
+  - List 1
+  - List 2
+  - List 3 |
+| Right-aligned cell| Left-aligned cell|
+
+Other Table
+
+| A:|B|
+| D:|Dunkelgrün|
+| C:|Grün|
+
 h2. List with code block is partially supported
 
 The numbering will be reset after each code block, but layout is preserved:
@@ -66,3 +95,54 @@ rm -rf /tmp/*
 # final item
 
 But some more complex case might result in broken list layout.
+
+
+h2. Wrongly formatted lists (wrong textile, but works in redmine)
+
+Correct List
+
+# A
+** A
+*** B
+**** C
+** A
+*** R
+# A
+** G
+*** G
+**** G
+***** G
+***** G
+**** G
+
+First wrong List
+
+# A
+#* A
+#** B
+#*** C
+#* A
+#** R
+# A
+#* G
+#** G
+#*** G
+#**** G
+#**** G
+#*** G
+
+Second wrong list
+
+* A
+*# A
+*## B
+*### C
+*# A
+*## R
+* A
+*# G
+*## G
+*### G
+*#### G
+*#### G
+*### G

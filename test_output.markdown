@@ -22,9 +22,14 @@ Try this:
 echo "OK"
 ```
 
+## Disabled strange \`\\\\www\.\`\` parsing parsing from redmine
+
+\\\\www\.server\\asd\\asd\\index.html  
+\\\\www\.server.com
+
 ## Quotations are preserved
 
-> I'll be back\! Ha\! You didn't know I was gonna say that, did you?
+> I'll be back! Ha! You didn't know I was gonna say that, did you?
 
 ## XML tags are preserved
 
@@ -48,12 +53,34 @@ http://example.com/example_site/#test
 ## Unsupported cell formatting is dropped silently
 
 |                         |                   |
-| ----------------------- | ----------------- |
+|-------------------------|-------------------|
 | one                     | two               |
-| Cell spanning 2 columns |
+| Cell spanning 2 columns |                   |
 | Cell spanning 2 rows    | one               |
-| two                     |
+| two                     |                   |
 | Right-aligned cell      | Left-aligned cell |
+
+## Unsupported multiline tables
+
+| one                                          | two |
+|----------------------------------------------|-----|
+| Cell spanning 2 columns<br/>asd |     |
+| Cell spanning 2 rows                         | one |
+
+
+| one                                                                                         | two                                                                                         |
+|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| multilinecell<br/>- List 1<br/>- List 2<br/>- List 3 | multilinecell<br/>- List 1<br/>- List 2<br/>- List 3 |
+| Right-aligned cell                                                                          | Left-aligned cell                                                                           |
+
+
+Other Table
+
+|     |            |
+|-----|------------|
+| A:  | B          |
+| D:  | Dunkelgrün |
+| C:  | Grün       |
 
 ## List with code block is partially supported
 
@@ -74,3 +101,53 @@ rm -rf /tmp/*
 1.  final item
 
 But some more complex case might result in broken list layout.
+
+## Wrongly formatted lists (wrong textile, but works in redmine)
+
+Correct List
+
+1.  A
+    -   A
+        -   B
+            -   C
+    -   A
+        -   R
+2.  A
+    -   G
+        -   G
+            -   G
+                -   G
+                -   G
+            -   G
+
+First wrong List
+
+1.  A
+    -   A
+        -   B
+            -   C
+    -   A
+        -   R
+2.  A
+    -   G
+        -   G
+            -   G
+                -   G
+                -   G
+            -   G
+
+Second wrong list
+
+-   A
+    1.  A
+        1.  B
+            1.  C
+    2.  A
+        1.  R
+-   A
+    1.  G
+        1.  G
+            1.  G
+                1.  G
+                2.  G
+            2.  G

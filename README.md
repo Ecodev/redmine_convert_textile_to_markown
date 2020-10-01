@@ -10,13 +10,14 @@ enough to get you started. Here are some known limitations:
 
 * Numbered lists containing `<pre>` blocks will lose their numbering (restarting at 1 after the `<pre>`). Some complex cases will lose their list layout entirely.
 * Tables without proper headers will be rendered with an empty header
+* Multilines tables will in the first pandoc run converted mostly to HTML which we detect and then in a second might end up as proper markdown tables (if it doesn't work it stays a HTML table) by removing the `<br/>` and afterwards introducing them again into the markdown.
 * Some [interlaced formatting of inline code and bold will be messed up](https://github.com/jgm/pandoc/issues/3024)
 * `<!-- -->` may appear in final ouput in a few places because Redmine incorrectly [does not support HTML in markdown](http://www.redmine.org/issues/20497)
 
 ## Usage
 
 1. Backup your database
-2. [Install pandoc](http://pandoc.org/installing.html)
+2. [Install pandoc](http://pandoc.org/installing.html). Look at the `setup.sh` to use on the server.
 3. Install the task:
 
     ```sh
@@ -29,6 +30,24 @@ enough to get you started. Here are some known limitations:
     ```sh
     bundle exec rake convert_textile_to_markdown RAILS_ENV=production
     ```
+
+5. Check if you have strangely converted HTML or Markdown Tables -> There might be false positives.
+
+   ```sh
+   cd $REDMINE_ROOT_DIRECTORY
+   wget -P lib/tasks/ https://github.com/Ecodev/count_tables/raw/master/convert_textile_to_markdown.rake
+   bundle exec rake count_tables RAILS_ENV=production
+   ```
+
+   This will output all content into files in the current working dir where HTML or markdown tables have been detected to counter check.
+
+## Testing
+
+Run the tests with
+
+```sh
+ruby test.rb
+```
 
 ## History
 
