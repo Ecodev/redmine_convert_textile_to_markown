@@ -20,7 +20,7 @@ Try this:<pre>
 echo "OK"
 </pre>
 
-h2. Disabled strange `\\www.`` parsing from redmine
+h2. Disabled strange <code>\\www.</code> parsing from redmine
 
 \\www.server\asd\asd\index.html
 \\www.server.com
