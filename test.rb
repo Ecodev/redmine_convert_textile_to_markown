@@ -10,7 +10,11 @@ end
 
 input = File.read('test_input.textile')
 expected = File.read('test_output.markdown')
-actual = convert_textile_to_markdown(input);
+actual = convert_textile_to_markdown(input, "test");
+File.open('test_run.markdown', 'wb') do |fo|
+  fo.write(actual)
+end
+
 
 if actual != expected
   a = temp_file('actual', actual)

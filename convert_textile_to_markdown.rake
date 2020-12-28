@@ -15,7 +15,7 @@ task :convert_textile_to_markdown => :environment do
   print 'WelcomeText'
   textile = Setting.welcome_text
   if textile != nil
-    markdown = convert_textile_to_markdown(textile)
+    markdown = convert_textile_to_markdown(textile, "welcome-text")
     Setting.welcome_text = markdown
   end
   count_success += 1
@@ -31,7 +31,7 @@ task :convert_textile_to_markdown => :environment do
         attributes.each do |attribute|
           textile = model[attribute]
           if textile != nil
-            markdown = convert_textile_to_markdown(textile)
+            markdown = convert_textile_to_markdown(textile, "#{the_class}-#{model.id}")
             model.update_column(attribute, markdown)
           end
         end
@@ -50,7 +50,7 @@ task :convert_textile_to_markdown => :environment do
   puts "Failed converting #{count_failure} models"
 end
 
-def convert_textile_to_markdown(textile)
+def convert_textile_to_markdown(textile, what)
   require 'tempfile'
 
   # Redmine support @ inside inline code marked with @ (such as "@git@github.com@"), but not pandoc.
@@ -67,11 +67,11 @@ def convert_textile_to_markdown(textile)
   textile.gsub!(/\|[<>=]\. /, '| ')
 
   # Move the class from <code> to <pre> so pandoc can generate a code block with correct language
-  textile.gsub!(/(<pre)(><code)( class="[^"]*")(>)/, '\\1\\3\\2\\4')
+  textile.gsub!(/(<pre)(><code)( +class="[^"]*")(>)/, '\\1\\3\\2\\4')
 
   # Remove the <code> directly inside <pre>, because pandoc would incorrectly preserve it
-  textile.gsub!(/(<pre[^>]*>)<code>/, '\\1')
-  textile.gsub!(/<\/code>(<\/pre>)/, '\\1')
+  textile.gsub!(/(<pre[^>]*>) *<code>/, '\\1')
+  textile.gsub!(/<\/code> *(<\/pre>)/, '\\1')
 
   # Inject a class in all <pre> that do not have a blank line before them
   # This is to force pandoc to use fenced code block (```) otherwise it would
@@ -85,10 +85,11 @@ def convert_textile_to_markdown(textile)
   # Without this fix, a list of items containing <pre> would not be interpreted as a list at all.
   textile.gsub!(/([^\n])(<pre)/, "\\1\n\n\\2")
 
-  # Some malformed textile content make pandoc run extremely slow,
-  # so we convert it to proper textile before hitting pandoc
-  # see https://github.com/jgm/pandoc/issues/3020
-  textile.gsub!(/-          # (\d+)/, "* \\1")
+  # Wrong textile input in lists
+  #    # List item 1
+  #    #* Subitem 1
+  textile.gsub!(/^( *)[#](\*+)( +)/, "\\1*\\2\\3")
+  textile.gsub!(/^( *)[\*](#+)( +)/, "\\1#\\2\\3")
 
   src = Tempfile.new('src')
   src.write(textile)
@@ -96,13 +97,17 @@ def convert_textile_to_markdown(textile)
   dst = Tempfile.new('dst')
   dst.close
 
+  # gfm dropped backtick_code_block extension
+  # https://github.com/jgm/pandoc/commit/3a22fbd11bba805140b1963a583a11b4fa1169a2
   command = [
     'pandoc',
+    '--eol=lf',
+    '--atx-headers',
     '--wrap=preserve',
     '-f',
     'textile',
     '-t',
-    'gfm+smart',
+    'markdown_github+smart',
     src.path,
     '-o',
     dst.path,
@@ -138,5 +143,54 @@ def convert_textile_to_markdown(textile)
   # Unescape URL that could easily get mangled
   markdown.gsub!(/(https?:\/\/\S+)/) { |link| link.gsub(/\\([_#])/, "\\1") }
 
+  # Match all textile tables and then replace line breaks in cells with <br> tags
+  # [untested]
+  # markdown.gsub!(/^\|.*\|/m) {
+  #   |table| table.gsub(/\|([^|]+\n?)*(?=|)/, "\\1") { |cell| cell.replace("\n", "<br />") }
+  # }
+
+  # Remove strange .www parsing
+  markdown.gsub!(/(\\\\)www\./, "\\1www\\.")
+
+  if markdown.include?("<table")
+    puts "WARNING: HTML table content in #{what}"
+    # Replace line breaks in html tables with tags and convert again -> pandoc should then
+    # output a pipe table
+    markdown.gsub!(/<table>.*?<\/table>/m) {
+      |m|
+      m.gsub!(/<br *\/> *\n/, ":::TAGLINEBREAK:::")
+
+
+      src = Tempfile.new('src')
+      src.write(m)
+      src.close
+      dst = Tempfile.new('dst')
+      dst.close
+
+      # gfm dropped backtick_code_block extension
+      # https://github.com/jgm/pandoc/commit/3a22fbd11bba805140b1963a583a11b4fa1169a2
+      command = [
+        'pandoc',
+        '--eol=lf',
+        '--wrap=preserve',
+        '-f',
+        'html',
+        '-t',
+        'markdown_github+smart',
+        src.path,
+        '-o',
+        dst.path,
+      ]
+      system(*command, :out => $stdout) or raise 'pandoc failed'
+
+      dst.open
+      m.replace(dst.read)
+
+      m.gsub!(/:::TAGLINEBREAK:::/, "<br/>")
+      m
+    }
+  end
+
   return markdown
 end
+
